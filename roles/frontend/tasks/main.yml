@@ -21,7 +21,7 @@
   ansible.builtin.copy:
     src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
-    remote_src: yes
+    # remote_src: yes
 
 # func_print_head "Clean Old App Content" 
 # rm -rf /usr/share/nginx/html/* &>>$log_file
