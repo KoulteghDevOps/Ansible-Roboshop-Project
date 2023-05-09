@@ -29,12 +29,12 @@
 
 - name: Clean Old App Content
   ansible.builtin.file:
-    path: /usr/share/nginx/html/*
+    path: /usr/share/nginx/html
     state: absent
 
 - name: Create App directory
   ansible.builtin.file:
-    path: /usr/share/nginx/html/
+    path: /usr/share/nginx/html
     state: directory
 
 # func_print_head "Downloading App Content"
