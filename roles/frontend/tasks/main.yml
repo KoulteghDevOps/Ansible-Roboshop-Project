@@ -7,7 +7,7 @@
 # func_status_check $?
 
 - name: Install Nginx
-  ansible.builtin,yum:
+  ansible.builtin.yum:
     name: nginx
     state: present
 
