@@ -1,0 +1,43 @@
+- name: Create App User
+  ansible.builtin.user:
+    name: "{{app_user}}"
+  
+- name: Clean Old App Content
+  ansible.builtin.file:
+    path: /app
+    state: absent
+
+- name: Create App directory
+  ansible.builtin.file:
+    path: /app
+    state: directory
+
+- name: Downloading App Content
+  ansible.builtin.unarchive:
+    src: https://roboshop-artifacts.s3.amazonaws.com/${component}.zip
+    dest: /app
+    remote_src: yes
+
+  # func_print_head "Create Application User"
+  # id ${app_user} &>>/tmp/roboshop.log
+  # if [ $? -ne 0 ]; then
+  #   useradd ${app_user} &>>/tmp/roboshop.log
+  # fi 
+  # func_status_check $?
+
+  # func_print_head "Create Application Directory" 
+  # rm -rf /app &>>$log_file
+  # mkdir /app &>>$log_file
+  # func_status_check $?
+
+  # func_print_head "Download Application Content" 
+  # curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>$log_file
+  # func_status_check $?
+
+  # func_print_head "Extract Application Content" 
+  # cd /app &>>$log_file
+  # unzip /tmp/${component}.zip &>>$log_file
+  # func_status_check $?
+
+  
+    

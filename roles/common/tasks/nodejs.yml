@@ -1,0 +1,42 @@
+- name: Configure NodeJS Repos
+  ansible.builtin.shell: curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+
+- name: Install NodeJS
+  ansible.builtin.yum:
+    name: nodejs
+    state: installed
+
+- name: Include App_Perequisites
+  ansible.builtin.import_tasks:
+    file: app_prereq.yml 
+
+- name: Install NodeJS Dependencies
+  ansible.builtin.shell: npm install
+  args:
+    chdir: /app
+
+- name: Include Schema setup
+  ansible.builtin.import_tasks:
+    file: schema_setup.yml 
+
+
+
+   # not required. The name of the imported playbook is specified directly without any other option.
+
+# func_print_head "Configure NodeJS Repos" 
+#   curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$log_file
+#   func_status_check $?
+
+#   func_print_head "Install NodeJS" 
+#   yum install nodejs -y &>>$log_file
+#   func_status_check $?
+
+#   func_app_prereq
+
+#   func_print_head "Install NodeJS Dependencies" 
+#   npm install &>>$log_file
+#   func_status_check $?
+  
+#   func_schema_setup 
+
+#   func_systemd_setup
