@@ -1,7 +1,3 @@
-- name: Demo
-  ansible.builtin.debug:
-    msg: Component - User
-
 - name: import Common NodeJS
   ansible.builtin.import_role:
     name: common
