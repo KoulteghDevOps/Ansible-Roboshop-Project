@@ -1,32 +1,17 @@
-- name: Demo
-  ansible.builtin.debug:
-    msg: Component - Frontend
-
-# func_print_head "Install Nginx" 
-# dnf install nginx -y &>>$log_file
-# func_status_check $?
-
 - name: Install Nginx
   ansible.builtin.yum:
     name: nginx
-    state: present
-
-# func_print_head "Copy App Config File" 
-# cp ${script_path}/roboshop.conf /etc/nginx/default.d/roboshop.conf &>>$log_file
-# # cp roboshop.conf /etc/nginx/default.d/roboshop.conf &>>$log_file
-# func_status_check $?
-# # cp roboshop.conf /etc/nginx/default.d/roboshop.conf
+    state: installed
 
 - name: Copy App Config File
   ansible.builtin.template:
     src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
-  #   remote_src: yes
-  # become: true
 
-# func_print_head "Clean Old App Content" 
-# rm -rf /usr/share/nginx/html/* &>>$log_file
-# func_status_check $?
+- name: Copy Nginx Config file
+  ansible.builtin.template:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
 
 - name: Clean Old App Content
   ansible.builtin.file:
@@ -38,28 +23,24 @@
     path: /usr/share/nginx/html
     state: directory
 
-# func_print_head "Downloading App Content"
-# curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>$log_file
-# func_status_check $?
-
 - name: Downloading App Content
   ansible.builtin.unarchive:
     src: https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
     dest: /usr/share/nginx/html/
     remote_src: yes
 
-# func_print_head "Extracting App Content" 
-# cd /usr/share/nginx/html &>>$log_file
-# unzip /tmp/frontend.zip &>>$log_file
-# func_status_check $?
-
 - name: Enable and Start service Nginx
   ansible.builtin.service:
     name: nginx
-    enabled: yes
+    enabled: true
     state: started
 
-# func_print_head "Start Nginx" 
-# systemctl enable nginx &>>$log_file
-# systemctl start nginx &>>$log_file
-# func_status_check $?
+- name: Import Filebeat
+  ansible.builtin.import_role:
+    name: elk
+    tasks_from: filebeat
+
+- name: Import Prometheus
+  ansible.builtin.import_role:
+    name: prometheus
+    tasks_from: node_exporter
