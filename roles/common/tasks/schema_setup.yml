@@ -20,7 +20,7 @@
 # func_status_check $?
 
 - name: Load MongoDB Schema
-  when: achema_setup == "mongo"
+  when: schema_setup == "mongo"
   block:
     - name: Copy MongoDB repo file
       ansible.builtin.yum:
@@ -36,7 +36,7 @@
       ansible.builtin.shell: mongo --host {{ lookup('aws_ssm', '{{ env }}.{{ component }}.mongo_endpoint', region='us-east-1' ) }} </app/schema/{{component}}.js
 
 - name: Load MySQL Schema
-  when: achema_setup == "mysql"
+  when: schema_setup == "mysql"
   block:
     - name: Install MySQL Client
       ansible.builtin.yum:
