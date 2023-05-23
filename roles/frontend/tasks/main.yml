@@ -32,8 +32,8 @@
 - name: Enable and Start service Nginx
   ansible.builtin.systemd:
     name: nginx
-    state: restarted
-    enabled: true
+    state: started
+    enabled: yes
     
 - name: Import Filebeat
   ansible.builtin.import_role:
