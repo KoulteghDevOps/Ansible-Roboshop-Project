@@ -30,10 +30,12 @@
     remote_src: yes
 
 - name: Enable and Start service Nginx
-  ansible.builtin.service:
+  ansible.builtin.systend:
     name: nginx
+    state: restarted
     enabled: true
-    state: started
+    
+    
 
 - name: Import Filebeat
   ansible.builtin.import_role:
