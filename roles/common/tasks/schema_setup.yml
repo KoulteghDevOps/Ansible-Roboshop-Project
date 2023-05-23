@@ -1,24 +1,3 @@
-
-# func_print_head "Copy MongoDB Repo" 
-# cp ${script_path}/mongo.repo /etc/yum.repos.d/mongo.repo &>>$log_file
-# func_status_check $?
-
-# func_print_head "Installing MongoDB Client" 
-# yum install mongodb-org-shell -y &>>$log_file
-# func_status_check $?
-
-# func_print_head "Load Schema" 
-# mongo --host mongodb-dev.gilbraltar.co.uk </app/schema/${component}.js &>>$log_file
-# func_status_check $?
-
-# func_print_head "Install MySQL Client" 
-# yum install mysql -y &>>$log_file
-# func_status_check $? 
-
-# func_print_head "Load Schema" 
-# mysql -h mysql-dev.gilbraltar.co.uk -uroot -p${mysql_root_password} < /app/schema/${component}.sql &>>$log_file
-# func_status_check $?
-
 - name: Load MongoDB Schema
   when: schema_setup == "mongo"
   block:
