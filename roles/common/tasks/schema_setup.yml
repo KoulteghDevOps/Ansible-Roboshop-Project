@@ -2,7 +2,7 @@
   when: schema_setup == "mongo"
   block:
     - name: Copy MongoDB repo file
-      ansible.builtin.yum:
+      ansible.builtin.copy:
         src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
       
@@ -20,7 +20,7 @@
     - name: Install MySQL Client
       ansible.builtin.yum:
         name: mysql
-        state: installed
+        # state: installed
       
     - name: Load Schema
       ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', '{{ env }}.{{ component }}.db_host', region='us-east-1' ) }} -u{{ lookup('aws_ssm', '{{ env }}.shipping.db_user', region='us-east-1' ) }} -p{{ lookup('aws_ssm', '{{ env }}.shipping.db_pass', region='us-east-1' ) }} < /app/schema/{{component}}.sql
