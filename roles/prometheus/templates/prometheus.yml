@@ -13,7 +13,7 @@ alerting:
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-  # - "first_rules.yml"
+  - "alerts.yml"
   # - "second_rules.yml"
 
 # A scrape configuration containing exactly one endpoint to scrape:
@@ -23,14 +23,18 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
   - job_name: "ec2-nodes"
-    # static_configs:
-    #   - targets: ["172.31.88.171:9100"]
     ec2_sd_configs:
       - region: us-east-1
         port: 9100
         filters:
           - name: tag:Monitor
             values: [ "true" ]
+    relabel_configs:
+      {% for label in labels %}
+
+      - source_labels: [ __meta_ec2_tag_{{ label.tag }} ]
+        target_label: {{ label.label }}
+      {%- endfor %}
 
 
 
