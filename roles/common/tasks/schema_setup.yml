@@ -18,8 +18,6 @@
 
     - name: Load Schema
       ansible.builtin.shell: mongo --ssl --host {{ lookup('aws_ssm', '{{ env }}.docdb.db_endpoint', region='us-east-1' ) }}:27017 --sslCAFile /app/rds-combined-ca-bundle.pem --username {{ lookup('aws_ssm', '{{ env }}.docdb.db_user', region='us-east-1' ) }} --password {{ lookup('aws_ssm', '{{ env }}.docdb.db_pass', region='us-east-1' ) }} </app/schema/{{component}}.js
-      
-     
 
 - name: Load MySQL Schema
   when: schema_setup == "mysql"
@@ -28,6 +26,11 @@
       ansible.builtin.yum:
         name: mysql
         # state: installed
-      
+
+    - name: Check Schema
+      ansible.builtin.shell: echo 'show databases' | mysql -h {{ lookup('aws_ssm', '{{ env }}.rds.db_host', region='us-east-1' ) }}  -u{{ lookup('aws_ssm', '{{ env }}.rds.db_user', region='us-east-1' ) }} -p{{ lookup('aws_ssm', '{{ env }}.rds.db_pass', region='us-east-1' ) }} | grep cities
+      ignore_errors: yes
+      register: out
+
     - name: Load Schema
       ansible.builtin.shell: mysql -h {{ lookup('aws_ssm', '{{ env }}.rds.db_host', region='us-east-1' ) }} -u{{ lookup('aws_ssm', '{{ env }}.rds.db_user', region='us-east-1' ) }} -p{{ lookup('aws_ssm', '{{ env }}.rds.db_pass', region='us-east-1' ) }} < /app/schema/{{component}}.sql
